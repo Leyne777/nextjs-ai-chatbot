@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { config } from 'dotenv';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
@@ -30,3 +31,4 @@ runMigrate().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+fix: added dotenv config to load POSTGRES_URL
