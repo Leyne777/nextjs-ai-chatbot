@@ -1,21 +1,20 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import postgres from "postgres";
 
-const handler = NextAuth({
-  providers: [
-    CredentialsProvider({
-      id: "guest",
-      name: "Guest",
-      credentials: {},
-      async authorize(credentials, req) {
-        return { id: "guest", name: "Guest User" }; // ya da null dönebilir
-      }
-    })
-  ],
-  pages: {
-    signIn: '/login',
-  },
-  secret: process.env.NEXTAUTH_SECRET,
+const connectionString = process.env.POSTGRES_URL!;
+
+const sql = postgres(connectionString, { max: 1 });
+const db = drizzle(sql);
+
+async function main() {
+  console.log("⏳ Running migrations...");
+  await migrate(db, { migrationsFolder: "drizzle" });
+  console.log("✅ Migrations complete!");
+  process.exit(0);
+}
+
+main().catch((err) => {
+  console.error("❌ Migration failed:", err);
+  process.exit(1);
 });
-
-export { handler as GET, handler as POST };
