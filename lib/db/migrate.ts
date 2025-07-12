@@ -1,14 +1,9 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+import dotenv from "dotenv";
+dotenv.config({ path: '.env.local' });
 
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import postgres from 'postgres';
-
-
-config({
-  path: '.env.local',
-});
 
 const runMigrate = async () => {
   if (!process.env.POSTGRES_URL) {
@@ -33,4 +28,4 @@ runMigrate().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-fix: added dotenv config to load POSTGRES_URL
+
